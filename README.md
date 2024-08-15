@@ -85,4 +85,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - OpenAI for providing the GPT-4 API
 - PDF.js for PDF parsing capabilities
-- Material UI for the component library
+- Material UI for the component library# Updated August 2024
