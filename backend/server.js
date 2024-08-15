@@ -82,4 +82,5 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     console.log('Press Ctrl+C to stop the server');
-});
+});# Add detailed logging for API key and analysis process
+# Add detailed logging for API key and analysis process
