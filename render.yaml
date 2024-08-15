@@ -10,3 +10,4 @@ services:
         value: 3001
       - key: OPENAI_API_KEY
         sync: false # Updated configuration
+# Update render.yaml with rootDir configuration
