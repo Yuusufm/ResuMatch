@@ -42,4 +42,5 @@
     ]
   }
 }
-# Fix Vercel deploymnet config
+
+# add render deployment config
