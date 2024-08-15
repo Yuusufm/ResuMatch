@@ -3,8 +3,8 @@ services:
     name: resumatch-backend
     runtime: node
     rootDir: backend
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && node server.js
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
       - key: PORT
         value: 3001
