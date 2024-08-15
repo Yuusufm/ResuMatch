@@ -9,5 +9,5 @@ services:
       - key: PORT
         value: 3001
       - key: OPENAI_API_KEY
-        sync: false # Updated configuration
+        sync: false
 # Update render.yaml with rootDir configuration
