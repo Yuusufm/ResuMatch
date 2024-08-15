@@ -171,4 +171,4 @@ function App() {
 }
 
 // remember to add dark mode toggle
-export default App;
+export default App;# Improve error handling in API calls
