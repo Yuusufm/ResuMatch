@@ -39,8 +39,8 @@ function App() {
         console.log('Sending job description:', jobDescription);
         
         try {
-            // might need to update this URL for production
-            const response = await fetch('http://localhost:3001/api/analyze', {
+            // Update this URL to use the environment variable
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/analyze`, {
                 method: 'POST',
                 body: formData,
             });
