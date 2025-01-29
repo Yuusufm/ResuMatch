@@ -30,34 +30,31 @@ function App() {
         const formData = new FormData();
         formData.append('resume', file);
         
-        // Only append job description if it's not empty
         if (jobDescription.trim()) {
             formData.append('jobDescription', jobDescription.trim());
         }
 
-        // Debug logging
-        console.log('Sending job description:', jobDescription);
-        
         try {
-            // Update this URL to use the environment variable
+            console.log('Sending request to:', process.env.REACT_APP_API_URL); // Debug log
+            
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/analyze`, {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                },
             });
 
-            const data = await response.json();
-            
             if (!response.ok) {
-                throw new Error(data.error || 'Analysis failed');
+                const errorData = await response.json().catch(() => null);
+                throw new Error(errorData?.error || `HTTP error! status: ${response.status}`);
             }
 
-            // Debug logging
-            console.log('Received analysis:', data.analysis);
-            
+            const data = await response.json();
             setAnalysis(data.analysis);
         } catch (err) {
             console.error('Analysis error:', err);
-            setError(err.message);
+            setError(err.message || 'Failed to analyze resume. Please try again.');
         } finally {
             setLoading(false);
         }
