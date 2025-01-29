@@ -12,6 +12,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
+// Use Render's PORT or fallback to 3001
 const port = process.env.PORT || 3001;
 
 app.use(cors());
