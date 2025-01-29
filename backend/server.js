@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
-// Use Render's PORT or fallback to 3001
+// Using Render's PORT or fallback to 3001
 const port = process.env.PORT || 3001;
 
 app.use(cors());
@@ -20,6 +20,17 @@ app.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+// Add this new root route
+app.get('/', (req, res) => {
+    res.json({ 
+        message: 'ResuMatch API is running',
+        status: 'healthy',
+        endpoints: {
+            analyze: '/api/analyze'
+        }
+    });
+});
 
 app.post('/api/analyze', upload.single('resume'), async (req, res) => {
     try {
