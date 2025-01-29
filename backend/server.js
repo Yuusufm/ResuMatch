@@ -15,7 +15,14 @@ const app = express();
 // Using Render's PORT or fallback to 3001
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        'https://resu-match-j7z2mdarz-yuusufs-projects-cab6110b.vercel.app',
+        'http://localhost:3000'  // for local development
+    ],
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
 app.use(express.json());
 
 const storage = multer.memoryStorage();
@@ -45,6 +52,9 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
 
        
         const analysis = await analyzeResume(req.file.buffer, jobDescription);
+        
+        // Make sure we're sending JSON
+        res.header('Content-Type', 'application/json');
         res.json(analysis);
     } catch (error) {
         console.error('Error analyzing resume:', error);
