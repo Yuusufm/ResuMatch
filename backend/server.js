@@ -17,16 +17,21 @@ const port = process.env.PORT || 3001;
 
 app.use(cors({
     origin: [
-        'https://resu-match-j7z2mdarz-yuusufs-projects-cab6110b.vercel.app',
+        'https://resu-match-181zsvgnu-yuusufs-projects-cab6110b.vercel.app',
+        'https://resu-match-delta.vercel.app',
         'http://localhost:3000'  // for local development
     ],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept'],
     credentials: true
 }));
 app.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+// Add preflight handling
+app.options('*', cors());
 
 // Add this new root route
 app.get('/', (req, res) => {
@@ -53,7 +58,8 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
        
         const analysis = await analyzeResume(req.file.buffer, jobDescription);
         
-        // Make sure we're sending JSON
+        // Set CORS headers explicitly
+        res.header('Access-Control-Allow-Origin', '*');
         res.header('Content-Type', 'application/json');
         res.json(analysis);
     } catch (error) {
