@@ -23,6 +23,7 @@ pdfjsLib.GlobalWorkerOptions.standardFontDataUrl =
 
 export async function analyzeResume(pdfBuffer, jobDescription = null) {
     try {
+        console.log('Starting OpenAI analysis...');
         // TODO: add support for larger files
         const pdf = await pdfjsLib.getDocument(new Uint8Array(pdfBuffer)).promise;
 
@@ -37,6 +38,7 @@ export async function analyzeResume(pdfBuffer, jobDescription = null) {
 
         
         const analysis = await analyzeWithGPT(fullText, jobDescription);
+        console.log('OpenAI analysis completed');
         return { success: true, analysis };
     } catch (error) {
         console.error('Error in analyzeResume:', error);
@@ -69,7 +71,7 @@ async function analyzeWithGPT(text, jobDescription = null) {
             ? `Resume: ${text}\n\nCompare this resume against the following job description:\n${jobDescription}`
             : `Resume: ${text}`;
 
-        const response = await openai.chat.completions.create({
+        const completion = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [
                 {
@@ -85,8 +87,9 @@ async function analyzeWithGPT(text, jobDescription = null) {
             max_tokens: 3000   // Increased again to ensure full response
         });
 
-        return response.choices[0].message.content;
+        return completion.choices[0].message.content;
     } catch (error) {
-        throw new Error(`OpenAI API error: ${error.message}`);
+        console.error('OpenAI API error:', error.message);
+        throw error;
     }
 }

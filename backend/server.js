@@ -15,6 +15,9 @@ const app = express();
 // Using Render's PORT or fallback to 3001
 const port = process.env.PORT || 3001;
 
+console.log('OpenAI API Key status:', process.env.OPENAI_API_KEY ? 'Present' : 'Missing');
+console.log('PORT:', process.env.PORT);
+
 app.use(cors({
     origin: [
         'https://resu-match-181zsvgnu-yuusufs-projects-cab6110b.vercel.app',
@@ -46,25 +49,33 @@ app.get('/', (req, res) => {
 
 app.post('/api/analyze', upload.single('resume'), async (req, res) => {
     try {
+        console.log('Received analysis request');
+        
+        if (!process.env.OPENAI_API_KEY) {
+            throw new Error('OpenAI API key is not configured');
+        }
+
         if (!req.file) {
+            console.log('No file uploaded');
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
+        console.log('Processing file:', req.file.originalname);
         const jobDescription = req.body.jobDescription;
         
-        // Debugging
-        //console.log('Received job description:', jobDescription);
-
-       
+        console.log('Starting analysis...');
         const analysis = await analyzeResume(req.file.buffer, jobDescription);
+        console.log('Analysis completed');
         
-        // Set CORS headers explicitly
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Content-Type', 'application/json');
         res.json(analysis);
     } catch (error) {
         console.error('Error analyzing resume:', error);
-        res.status(500).json({ error: 'Error analyzing resume' });
+        res.status(500).json({ 
+            error: 'Error analyzing resume: ' + error.message,
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 });
 
